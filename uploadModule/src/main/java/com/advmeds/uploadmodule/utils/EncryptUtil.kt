@@ -1,5 +1,6 @@
 package com.advmeds.uploadmodule.utils
 
+import android.annotation.SuppressLint
 import android.util.Base64
 import java.security.SecureRandom
 import javax.crypto.Cipher
