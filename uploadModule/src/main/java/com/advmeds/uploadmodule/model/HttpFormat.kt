@@ -1,19 +1,18 @@
 package com.advmeds.uploadmodule.model
 
-open class HttpFormat {
-    var baseUrl: String? = null
+class HttpFormat(val requestType: String, val baseUrl: String) {
     var headers: MutableMap<String, String>? = null
+    var propertyMap: MutableMap<String, String>? = null
+    var body: ByteArray? = null
+
+    companion object {
+        const val GET = "GET"
+        const val POST = "POST"
+    }
 }
 
-class HttpGet(
-) : HttpFormat() {
-
-}
-
-class HttpPost(
-    var propertyMap: MutableMap<String, String>? = null,
-    val data: ByteArray
-) : HttpFormat() {
-
+class HttpResponse {
+    var code: Int = 0
+    var content: ByteArray? = null
 }
 

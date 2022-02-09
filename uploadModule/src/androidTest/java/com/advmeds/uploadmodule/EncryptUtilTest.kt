@@ -12,4 +12,14 @@ class EncryptUtilTest {
     fun getAesKeyTest() {
         EncryptUtil.getAesKey()?.encoded
     }
+
+    @Test
+    fun encryptAndDecryptTest() {
+        val content = "djsklj123io9sfjlk@3lksj"
+        val encryptContent = EncryptUtil.encryptUploadContent(content.toByteArray())
+        assert(encryptContent != null)
+        val decryptContent = EncryptUtil.decryptUploadContent(encryptContent!!)
+        assert(decryptContent != null)
+        assert(content == String(decryptContent!!))
+    }
 }

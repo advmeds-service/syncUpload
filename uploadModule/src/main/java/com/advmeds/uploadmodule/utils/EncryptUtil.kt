@@ -12,7 +12,7 @@ class EncryptUtil {
 
     companion object {
 
-        private val key = byteArrayOf(
+        val key = byteArrayOf(
             4, -5, -19, 65, 78, -92, 72, 32,
             89, 0, -32, -5, -94, -67, -73, 103,
             37, -69, 58, -107, -51, 3, -102, 25,
@@ -61,10 +61,6 @@ class EncryptUtil {
             return Base64.encodeToString(content, Base64.DEFAULT)
         }
 
-        fun base64Decode(content: ByteArray): String {
-            return Base64.encodeToString(content, Base64.DEFAULT)
-        }
-
         fun encryptUploadContent(data: ByteArray): String? {
             aesEncrypt(key, data)?.let {
                 return base64Encode(it)
@@ -72,8 +68,8 @@ class EncryptUtil {
             return null
         }
 
-        fun decryptUploadContent(data: ByteArray): ByteArray? {
-            return aesDecrypt(key, base64Decode(data).toByteArray())
+        fun decryptUploadContent(data: String): ByteArray? {
+            return aesDecrypt(key, Base64.decode(data, Base64.DEFAULT))
         }
     }
 }
