@@ -35,13 +35,13 @@ class RoomController private constructor(private var applicationContext: Context
     fun saveRequestInfo(httpFormat: HttpFormat) {
 
         sqlQueue.execute {
-            val parseController = HttpFormatSerialize()
+            val serialize = HttpFormatSerialize()
             val requestInfo = RequestInfo(
-                url = parseController.serializationUrl(httpFormat),
-                headers = parseController.serializationHeader(httpFormat),
-                body = parseController.serializationBody(httpFormat),
-                property = parseController.serializationProperty(httpFormat),
-                type = httpFormat.requestType,
+                url = serialize.serializationString(httpFormat.baseUrl),
+                headers = serialize.serializationMap(httpFormat.headers),
+                body = serialize.serializationByteArray(httpFormat.body),
+                property = serialize.serializationMap(httpFormat.propertyMap),
+                type = serialize.serializationString(httpFormat.requestType),
                 uploadState = RequestInfo.UPLOADING
             )
             requestInfoDao.insert(requestInfo)
