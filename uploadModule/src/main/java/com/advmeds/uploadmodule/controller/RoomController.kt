@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import com.advmeds.uploadmodule.dao.RequestInfoDao
 import com.advmeds.uploadmodule.model.HttpFormat
 import com.advmeds.uploadmodule.model.RequestInfo
+import com.advmeds.uploadmodule.net.HttpFormatSerialize
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -34,7 +35,7 @@ class RoomController private constructor(private var applicationContext: Context
     fun saveRequestInfo(httpFormat: HttpFormat) {
 
         sqlQueue.execute {
-            val parseController = HttpFormatParseController()
+            val parseController = HttpFormatSerialize()
             val requestInfo = RequestInfo(
                 url = parseController.serializationUrl(httpFormat),
                 headers = parseController.serializationHeader(httpFormat),

@@ -22,26 +22,26 @@ class EncryptUtil {
         private const val AES_PKCS7Padding = "AES/ECB/PKCS7Padding"
 
         fun aesEncrypt(aesKey: ByteArray, content: ByteArray): ByteArray? {
-            try {
+            return try {
                 val secretKeySpec = SecretKeySpec(aesKey, AES_PKCS7Padding)
                 val cipher = Cipher.getInstance(AES_PKCS7Padding)
                 cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec)
-                return cipher.doFinal(content)
+                cipher.doFinal(content)
             } catch (e: Exception) {
                 LogUtils.e(e)
-                return null
+                null
             }
         }
 
         fun aesDecrypt(aesKey: ByteArray, content: ByteArray): ByteArray? {
-            try {
+            return try {
                 val secretKeySpec = SecretKeySpec(aesKey, AES_PKCS7Padding)
                 val cipher = Cipher.getInstance(AES_PKCS7Padding)
                 cipher.init(Cipher.DECRYPT_MODE, secretKeySpec)
-                return cipher.doFinal(content)
+                cipher.doFinal(content)
             } catch (e: Exception) {
                 LogUtils.e(e)
-                return null
+                null
             }
         }
 

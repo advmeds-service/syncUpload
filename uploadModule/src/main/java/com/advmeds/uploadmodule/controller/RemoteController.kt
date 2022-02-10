@@ -4,6 +4,7 @@ import android.app.Application
 import com.advmeds.uploadmodule.model.HttpFormat
 import com.advmeds.uploadmodule.model.HttpResponse
 import com.advmeds.uploadmodule.model.RequestInfo
+import com.advmeds.uploadmodule.net.Connection
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -32,7 +33,10 @@ object RemoteController {
     ) {
         RoomController.getInstance(application.applicationContext).saveRequestInfo(httpFormat)
 
-        // TODO 请求http
+        remoteQueue.execute {
+            val connection = Connection()
+            connection.connect(httpFormat)
+        }
     }
 
 }
