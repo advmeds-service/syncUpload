@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.advmeds.uploadDemo.ui.theme.UploadTheme
 import com.advmeds.uploadmodule.controller.RemoteController
 import com.advmeds.uploadmodule.model.HttpFormat
+import com.advmeds.uploadmodule.utils.LogUtils
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,20 +36,18 @@ fun Greeting() {
         Button(onClick = {
             val httpFormat = HttpFormat(
                     requestType = HttpFormat.GET,
-            baseUrl = "https://www.google.com"
+            baseUrl = "https://www.wosign.com/News/chrome-https.htm"
             )
-            httpFormat.headers = mutableMapOf(
+          /*  httpFormat.headers = mutableMapOf(
                 "title0" to "value0",
                 "title1" to "value1",
                 "title2" to "value2"
             )
-            httpFormat.body = "body test".toByteArray()
-            httpFormat.propertyMap = mutableMapOf(
-                "property0" to "value0",
-                "property1" to "value1",
-                "property2" to "value2",
-            )
-            RemoteController.request(httpFormat)
+            httpFormat.body = "body test".toByteArray()*/
+
+            RemoteController.request(httpFormat) {
+                LogUtils.d("code: ${it.code} ${it.getString()}")
+            }
         }) {
             Text(text = "Get")
         }

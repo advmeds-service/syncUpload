@@ -17,14 +17,19 @@ class HttpFormatSerializeTest {
         val value0 = "test Value0"
         val title1 = "testTitle1"
         val value1 = "testValue1"
-        val map = mutableMapOf(
+        val map0 = mutableMapOf(
             title0 to value0,
             title1 to value1
         )
-        val content = httpFormatSerialize.serializationMap(map)
-        val result = httpFormatSerialize.deserializeMap(content)
+        val map1 = mutableMapOf<String, String>()
+        val map2: MutableMap<String, String>? = null
+
+        val result = httpFormatSerialize.deserializeMap(httpFormatSerialize.serializationMap(map0))
         assert(result!![title0] == value0)
         assert(result[title1] == value1)
+
+        assert(httpFormatSerialize.deserializeMap(httpFormatSerialize.serializationMap(map1)) == null)
+        assert(httpFormatSerialize.deserializeMap(httpFormatSerialize.serializationMap(map2)) == null)
     }
 
     @Test

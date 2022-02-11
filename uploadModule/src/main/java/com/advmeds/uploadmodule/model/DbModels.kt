@@ -9,6 +9,7 @@ data class RequestInfo(
     val headers: String,
     val body: String = "",
     val property: String = "",
+    val time: Long = System.currentTimeMillis(),
     val type: String,
     val uploadState: Int
 ) {

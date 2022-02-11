@@ -40,7 +40,6 @@ class RoomController private constructor(private var applicationContext: Context
                 url = serialize.serializationString(httpFormat.baseUrl),
                 headers = serialize.serializationMap(httpFormat.headers),
                 body = serialize.serializationByteArray(httpFormat.body),
-                property = serialize.serializationMap(httpFormat.propertyMap),
                 type = serialize.serializationString(httpFormat.requestType),
                 uploadState = RequestInfo.UPLOADING
             )

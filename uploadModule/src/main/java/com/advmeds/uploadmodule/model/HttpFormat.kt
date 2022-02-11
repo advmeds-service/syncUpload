@@ -2,7 +2,6 @@ package com.advmeds.uploadmodule.model
 
 class HttpFormat(val requestType: String, val baseUrl: String) {
     var headers: MutableMap<String, String>? = null
-    var propertyMap: MutableMap<String, String>? = null
     var body: ByteArray? = null
 
     companion object {
@@ -14,5 +13,12 @@ class HttpFormat(val requestType: String, val baseUrl: String) {
 class HttpResponse {
     var code: Int = 0
     var content: ByteArray? = null
+
+    fun getString(): String {
+        content?.let {
+            return String(it)
+        }
+        return ""
+    }
 }
 

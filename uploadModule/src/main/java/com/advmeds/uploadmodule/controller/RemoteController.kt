@@ -1,6 +1,8 @@
 package com.advmeds.uploadmodule.controller
 
 import android.app.Application
+import android.os.Handler
+import android.os.Looper
 import com.advmeds.uploadmodule.model.HttpFormat
 import com.advmeds.uploadmodule.model.HttpResponse
 import com.advmeds.uploadmodule.model.RequestInfo
@@ -19,6 +21,8 @@ object RemoteController {
         LinkedBlockingDeque<Runnable>()
     )
 
+    private val handler = Handler(Looper.getMainLooper())
+
     lateinit var application: Application
         private set
 
@@ -28,14 +32,31 @@ object RemoteController {
 
     fun request(
         httpFormat: HttpFormat,
-        success: ((response: HttpResponse) -> Unit)? = null,
-        fail: ((response: HttpResponse) -> Unit)? = null
+        isAsynchronous: Boolean = true,
+        extraSuccessCodes: IntArray? = null,/* other response code than 200*/
+        callback: ((response: HttpResponse) -> Unit)? = null,
     ) {
         RoomController.getInstance(application.applicationContext).saveRequestInfo(httpFormat)
 
         remoteQueue.execute {
             val connection = Connection()
-            connection.connect(httpFormat)
+            val response = connection.connect(httpFormat)
+            callback?.let {
+                if (isAsynchronous) {
+                    executeOnMainThread {
+                        it(response)
+                    }
+                } else {
+                    it(response)
+                }
+            }
+            // TODO update db state or delete db request info
+        }
+    }
+
+    fun executeOnMainThread(func: () -> Unit) {
+        handler.post {
+            func()
         }
     }
 

@@ -6,7 +6,7 @@ import java.lang.Exception
 class LogUtils {
 
     companion object {
-        private val tag = "uploadModule"
+        private const val tag = "uploadModule"
         var showLog = true
 
         fun d(message: String) {
