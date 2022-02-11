@@ -103,8 +103,10 @@ class Connection {
 
     private fun getResponse(): HttpResponse {
         val result = HttpResponse()
-        result.code = urlConnection?.responseCode ?: -1
-        result.content = getDataByteArray()
+        kotlin.runCatching {
+            result.code = urlConnection?.responseCode ?: -1
+            result.content = getDataByteArray()
+        }
         return result
     }
 }

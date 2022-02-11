@@ -33,10 +33,11 @@ object RemoteController {
     fun request(
         httpFormat: HttpFormat,
         isAsynchronous: Boolean = true,
-        extraSuccessCodes: IntArray? = null,/* other response code than 200*/
-        callback: ((response: HttpResponse) -> Unit)? = null,
+        extraSuccessCodes: IntArray? = null,/* 除200 以外 逻辑上认为成功的响应码*/
+        callback: ((response: HttpResponse) -> Unit)? = null
     ) {
-        RoomController.getInstance(application.applicationContext).saveRequestInfo(httpFormat)
+        val time = System.currentTimeMillis()
+        RoomController.getInstance(application.applicationContext).saveRequestInfo(httpFormat, time)
 
         remoteQueue.execute {
             val connection = Connection()
@@ -50,14 +51,37 @@ object RemoteController {
                     it(response)
                 }
             }
-            // TODO update db state or delete db request info
+
+            if (isSuccess(response, extraSuccessCodes)) {
+                deleteRequestInfo(time)
+            } else {
+                uploadFail(time)
+            }
         }
     }
 
-    fun executeOnMainThread(func: () -> Unit) {
+    private fun executeOnMainThread(func: () -> Unit) {
         handler.post {
             func()
         }
+    }
+
+    private fun deleteRequestInfo(time: Long) {
+        executeOnMainThread {
+            RoomController.getInstance(application.applicationContext).deleteRequestInfo(time)
+        }
+    }
+
+    private fun uploadFail(time: Long) {
+        executeOnMainThread {
+            RoomController.getInstance(application.applicationContext).updateState(time, RequestInfo.UPLOAD_FAIL)
+        }
+    }
+
+    private fun isSuccess(
+        response: HttpResponse,
+        extraSuccessCodes: IntArray?): Boolean {
+        return response.code == 200 || extraSuccessCodes?.contains(response.code) == true
     }
 
 }

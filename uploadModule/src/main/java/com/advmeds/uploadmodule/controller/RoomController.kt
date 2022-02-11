@@ -32,7 +32,7 @@ class RoomController private constructor(private var applicationContext: Context
         db.requestInfoDao()
     }
 
-    fun saveRequestInfo(httpFormat: HttpFormat) {
+    fun saveRequestInfo(httpFormat: HttpFormat, time: Long) {
 
         sqlQueue.execute {
             val serialize = HttpFormatSerialize()
@@ -41,11 +41,24 @@ class RoomController private constructor(private var applicationContext: Context
                 headers = serialize.serializationMap(httpFormat.headers),
                 body = serialize.serializationByteArray(httpFormat.body),
                 type = serialize.serializationString(httpFormat.requestType),
+                time = time,
                 uploadState = RequestInfo.UPLOADING
             )
             requestInfoDao.insert(requestInfo)
         }
 
+    }
+
+    fun deleteRequestInfo(time: Long) {
+        sqlQueue.execute {
+            requestInfoDao.deleteByTime(time)
+        }
+    }
+
+    fun updateState(time: Long, state: Int) {
+        sqlQueue.execute {
+            requestInfoDao.updateStateByTime(time, state)
+        }
     }
 
     companion object {
