@@ -1,15 +1,15 @@
 package com.advmeds.uploadmodule
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.advmeds.uploadmodule.net.HttpFormatSerialize
-import com.advmeds.uploadmodule.model.HttpFormat
+import com.advmeds.uploadmodule.net.HttpFormatSerialization
+import com.google.gson.Gson
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class HttpFormatSerializeTest {
+class HttpFormatSerializationTest {
 
-    private val httpFormatSerialize = HttpFormatSerialize()
+    private val httpFormatSerialize = HttpFormatSerialization()
 
     @Test
     fun parserMapTest() {
@@ -57,5 +57,28 @@ class HttpFormatSerializeTest {
         assert(httpFormatSerialize.deserializeByteArray(httpFormatSerialize.serializationByteArray(byteArray1)) == null)
         assert(httpFormatSerialize.deserializeByteArray(httpFormatSerialize.serializationByteArray(byteArray2)) == null)
 
+    }
+
+    @Test
+    fun serializeByIntArrayTest() {
+        val array0 = intArrayOf(1, 2, 3)
+        val array1 = intArrayOf()
+        val array2: IntArray? = null
+
+        val resultIntArray = httpFormatSerialize.deserializeIntArray(httpFormatSerialize.serializeIntArray(array0))
+        assert(resultIntArray!!.isNotEmpty())
+        for (i in resultIntArray.indices) {
+            assert(resultIntArray[i] == array0[i])
+        }
+
+        assert(httpFormatSerialize.deserializeIntArray(httpFormatSerialize.serializeIntArray(array1)) == null)
+        assert(httpFormatSerialize.deserializeIntArray(httpFormatSerialize.serializeIntArray(array2)) == null)
+    }
+
+    @Test
+    fun test() {
+        val gson = Gson()
+        val array = intArrayOf(2, 3, 4)
+        val test = gson.toJson(array)
     }
 }

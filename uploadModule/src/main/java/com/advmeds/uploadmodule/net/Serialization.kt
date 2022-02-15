@@ -1,14 +1,20 @@
 package com.advmeds.uploadmodule.net
 
-import com.advmeds.uploadmodule.model.HttpFormat
 import com.advmeds.uploadmodule.utils.EncryptUtil
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class HttpFormatSerialize {
+open class Serialization {
 
     fun serializationMap(value: MutableMap<String, String>?): String {
         if (value == null || value.isEmpty()) return ""
+        return EncryptUtil.encryptUploadContent(Gson().toJson(value).toByteArray()) ?: ""
+    }
+
+    fun serializeIntArray(value: IntArray?): String {
+        if (value == null || value.isEmpty()) {
+            return ""
+        }
         return EncryptUtil.encryptUploadContent(Gson().toJson(value).toByteArray()) ?: ""
     }
 
@@ -39,6 +45,19 @@ class HttpFormatSerialize {
         return gson.fromJson(String(decryptContent), type)
     }
 
+    fun deserializeIntArray(value: String): IntArray? {
+        if (value.isEmpty()) {
+            return null
+        }
+        val decryptContent = EncryptUtil.decryptUploadContent(value)
+        if (decryptContent == null || decryptContent.isEmpty()) {
+            return null
+        }
+        val gson = Gson()
+        val type = object : TypeToken<IntArray>() {}.type
+        return gson.fromJson(String(decryptContent), type)
+    }
+
     fun deserializeString(value: String): String {
         if (value.isEmpty()) {
             return ""
@@ -55,5 +74,4 @@ class HttpFormatSerialize {
         }
         return EncryptUtil.decryptUploadContent(value)
     }
-
 }

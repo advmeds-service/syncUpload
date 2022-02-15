@@ -7,7 +7,8 @@ import androidx.room.RoomDatabase
 import com.advmeds.uploadmodule.dao.RequestInfoDao
 import com.advmeds.uploadmodule.model.HttpFormat
 import com.advmeds.uploadmodule.model.RequestInfo
-import com.advmeds.uploadmodule.net.HttpFormatSerialize
+import com.advmeds.uploadmodule.net.Dispatch
+import com.advmeds.uploadmodule.net.HttpFormatSerialization
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -33,20 +34,27 @@ class RoomController private constructor(private var applicationContext: Context
     }
 
     fun saveRequestInfo(httpFormat: HttpFormat, time: Long) {
-
         sqlQueue.execute {
-            val serialize = HttpFormatSerialize()
-            val requestInfo = RequestInfo(
-                url = serialize.serializationString(httpFormat.baseUrl),
-                headers = serialize.serializationMap(httpFormat.headers),
-                body = serialize.serializationByteArray(httpFormat.body),
-                type = serialize.serializationString(httpFormat.requestType),
-                time = time,
-                uploadState = RequestInfo.UPLOADING
-            )
+            val serialize = HttpFormatSerialization()
+            val requestInfo = serialize.serializationHttpFormat(httpFormat)
+            requestInfo.time = time
             requestInfoDao.insert(requestInfo)
         }
+    }
 
+    fun getRequestInfo(
+        startOffset: Int,
+        defaultCount: Int,
+        callback: (result: MutableList<RequestInfo>) -> Unit) {
+         sqlQueue.execute {
+             callback(requestInfoDao.getRequestInfoByState(RequestInfo.UPLOAD_FAIL, startOffset, defaultCount))
+         }
+    }
+
+    fun getUploadFailCount(result: (count: Int) -> Unit) {
+        sqlQueue.execute {
+            result(requestInfoDao.getCountByState(RequestInfo.UPLOAD_FAIL))
+        }
     }
 
     fun deleteRequestInfo(time: Long) {

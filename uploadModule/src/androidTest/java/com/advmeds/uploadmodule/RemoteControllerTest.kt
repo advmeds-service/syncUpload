@@ -5,7 +5,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.advmeds.uploadmodule.controller.RemoteController
 import com.advmeds.uploadmodule.model.HttpFormat
-import com.advmeds.uploadmodule.model.HttpResponse
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,6 +30,6 @@ class RemoteControllerTest {
         )
         httpFormat.body = "body test".toByteArray()
 
-        RemoteController.request(httpFormat)
+        RemoteController.upload(httpFormat)
     }
 }

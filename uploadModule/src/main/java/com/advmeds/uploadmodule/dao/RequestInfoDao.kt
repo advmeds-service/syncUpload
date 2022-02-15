@@ -16,4 +16,10 @@ interface RequestInfoDao {
 
     @Query("UPDATE RequestInfo SET uploadState = :state WHERE time = :time")
     fun updateStateByTime(time: Long, state: Int)
+
+    @Query("SELECT * FROM RequestInfo WHERE uploadState = :state LIMIT :startOffset, :defaultCount")
+    fun getRequestInfoByState(state: Int, startOffset: Int, defaultCount: Int): MutableList<RequestInfo>
+
+    @Query("SELECT COUNT(*) FROM RequestInfo WHERE uploadState = :state")
+    fun getCountByState(state: Int): Int
 }

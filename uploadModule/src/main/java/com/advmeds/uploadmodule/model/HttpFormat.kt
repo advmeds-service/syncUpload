@@ -4,6 +4,11 @@ class HttpFormat(val requestType: String, val baseUrl: String) {
     var headers: MutableMap<String, String>? = null
     var body: ByteArray? = null
 
+    /**
+     * 除200 以外 逻辑上认为成功的响应码
+     */
+    var extraSuccessCodes: IntArray? = null
+
     companion object {
         const val GET = "GET"
         const val POST = "POST"
