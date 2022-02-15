@@ -16,7 +16,7 @@ class HttpFormat(val requestType: String, val baseUrl: String) {
 }
 
 class HttpResponse {
-    var code: Int = 0
+    var code: Int = -1
     var content: ByteArray? = null
 
     fun getString(): String {

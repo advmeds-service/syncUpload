@@ -20,7 +20,7 @@ class Connection {
 
     fun connect(httpFormat: HttpFormat): HttpResponse {
         this.httpFormat = httpFormat
-
+        val response = HttpResponse()
         try {
             val url = URL(httpFormat.baseUrl)
             urlConnection = url.openConnection() as? HttpsURLConnection
@@ -29,6 +29,7 @@ class Connection {
             connect()
             write()
             read()
+            response.content = getDataByteArray()
         } catch (e: Exception) {
             LogUtils.e(e)
         } finally {
@@ -50,7 +51,7 @@ class Connection {
             urlConnection?.disconnect()
         }
 
-        return getResponse()
+        return response
     }
 
     private fun setConfig() {
@@ -87,26 +88,10 @@ class Connection {
         return byteArrayOutputStream.toByteArray()
     }
 
-    fun getDataString(): String {
-        if (byteArrayOutputStream.size() == 0) {
-            return ""
-        }
-        return byteArrayOutputStream.toString()
-    }
-
     fun getDataByteArray(): ByteArray? {
         if (byteArrayOutputStream.size() == 0) {
             return null
         }
         return byteArrayOutputStream.toByteArray()
-    }
-
-    private fun getResponse(): HttpResponse {
-        val result = HttpResponse()
-        kotlin.runCatching {
-            result.code = urlConnection?.responseCode ?: -1
-            result.content = getDataByteArray()
-        }
-        return result
     }
 }
