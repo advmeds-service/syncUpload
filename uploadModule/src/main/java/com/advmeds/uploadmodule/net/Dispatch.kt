@@ -2,6 +2,8 @@ package com.advmeds.uploadmodule.net
 
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.MainThread
+import com.advmeds.uploadmodule.utils.LogUtils
 
 class Dispatch {
     companion object {

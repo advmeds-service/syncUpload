@@ -11,9 +11,7 @@ import com.advmeds.uploadmodule.net.Connection
 import com.advmeds.uploadmodule.net.Dispatch
 import com.advmeds.uploadmodule.net.HttpFormatSerialization
 import com.advmeds.uploadmodule.utils.LogUtils
-import java.util.concurrent.LinkedBlockingDeque
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
 object RemoteController {
 
@@ -55,7 +53,7 @@ object RemoteController {
     }
 
     private fun restartConnect(count: Int, callbackOnMainThread: Boolean = true, callback: ((response: HttpResponse) -> Unit)? = null) {
-        val defaultCount = 1
+        val defaultCount = 20
         val serialize = HttpFormatSerialization()
         RoomController.getInstance(application.applicationContext).getRequestInfo(0, defaultCount) {
 
